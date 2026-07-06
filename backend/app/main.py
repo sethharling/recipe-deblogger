@@ -27,7 +27,10 @@ app = FastAPI(title="Recipe Deblogger API", version="0.1.0")
 # Vite dev server defaults to :5173. Tighten this for production.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://recipe-deblogger.com"],
+    allow_origins=["http://localhost:5173", 
+                   "http://recipe-deblogger.com", 
+                   "https://recipe-deblogger.onrender.com"
+                   ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -36,6 +39,10 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup() -> None:
     init_db()
+
+@app.get("/")
+async def root() -> dict[str, str]:
+    return {"status": "ok"}
 
 
 @app.get("/health")
