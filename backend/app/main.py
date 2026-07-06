@@ -29,7 +29,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", 
                    "http://recipe-deblogger.com", 
-                   "https://recipe-deblogger.onrender.com"
+                   "https://recipe-deblogger.onrender.com/*"
                    ],
     allow_methods=["*"],
     allow_headers=["*"],
