@@ -1,0 +1,149 @@
+/* Warm / recipe-card theme. Vanilla CSS, tokens as custom properties. */
+:root {
+  --bg: #f4ece0;
+  --card: #fffdf8;
+  --ink: #2b2320;
+  --ink-soft: #6b5d52;
+  --accent: #b8562f;
+  --accent-dark: #8f3f20;
+  --border: #e3d6c4;
+  --radius: 12px;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.6;
+}
+
+main {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+/* Header + nav */
+main > h1 {
+  font-family: var(--serif);
+  font-size: 2rem;
+  margin: 0 0 0.25rem;
+}
+
+nav {
+  margin-bottom: 2rem;
+  color: var(--ink-soft);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+/* Forms / inputs */
+input {
+  font: inherit;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: inherit;
+  max-width: 100%;
+}
+input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+button {
+  font: inherit;
+  font-weight: 600;
+  padding: 0.55rem 1.1rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+button:hover:not(:disabled) {
+  background: var(--accent-dark);
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Recipe card */
+article {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem 2rem;
+  box-shadow: 0 2px 12px rgba(80, 55, 30, 0.06);
+}
+
+article h2 {
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  margin: 0 0 0.75rem;
+}
+
+article h3 {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  margin: 1.5rem 0 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid var(--border);
+}
+
+article img {
+  display: block;
+  width: 100%;
+  max-height: 20rem;
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+  object-fit: cover;
+}
+
+article ul,
+article ol {
+  padding-left: 1.4rem;
+}
+li {
+  margin: 0.4rem 0;
+}
+
+/* meta line (serves / time / source) */
+article p {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+/* Saved list */
+h2 {
+  font-family: var(--serif);
+}
+
+.error {
+  color: var(--accent-dark);
+  font-weight: 500;
+}
