@@ -19,6 +19,8 @@ DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./recipes.db")
 # Render (and others) hand out a "postgres://" URL; SQLAlchemy needs an explicit driver.
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg://", 1)
+elif DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
 
 # check_same_thread is a SQLite-only arg; Postgres rejects it.
 _connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
