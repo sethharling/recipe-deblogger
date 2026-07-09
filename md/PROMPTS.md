@@ -169,3 +169,36 @@ LLM TODO; video-only recipes need transcription (Whisper) + vision, a much bigge
 Recommended building the general LLM fallback tier first, then an IG-caption adapter on
 top. Recorded the full analysis in CONTEXT.md ("Instagram recipes" section) and linked
 it from Next steps. No code written.
+
+---
+
+## 2026-07-08 — #13: Hook up Postgres on Render
+
+> is this app using postgres yet or still just the recipes.db file?
+> i have deployed this backend to render for my live website. How would I hook up
+> postgres to do my database?
+
+**What Claude did:** Confirmed it was still SQLite. Made `app/db.py` read `DATABASE_URL`
+from env (falls back to local SQLite), normalize Render's `postgres://` scheme to
+`postgresql+psycopg://`, and pass `check_same_thread` only for SQLite. Added
+`psycopg[binary]>=3.2` to `requirements.txt`. Gave Render steps: create a Render Postgres
+in the same region, set the web service's `DATABASE_URL` to the Internal URL; table
+auto-creates via `init_db()`. Verified SQLite fallback still builds cleanly. Noted old
+`recipes.db` data doesn't migrate (was ephemeral on Render anyway).
+
+---
+
+## 2026-07-08 — #14: Footer, centered header, nav polish, intro blurb
+
+> for the UI, can you create a footer that links to the github repo and also a tipjar.
+> add icons for both. also, center "recipe deblogger" and the page menus, maybe even
+> spice the menu up a bit. on the deblog page write a small excerpt on why we made this
+> site.
+
+**What Claude did:** Restructured `App.tsx` into `.app` > header/main/footer (flex
+column, footer pinned to bottom). Centered the title + nav. Nav links are now pill
+buttons with hover + active-page highlight (switched `Link`→`NavLink`). Added a footer
+with GitHub + Tip jar links, icons via `<use href="/icons.svg#...">` — reused the
+existing `github-icon`, added a heart `tipjar-icon` to the sprite. Added an intro blurb
+to DeblogPage. `REPO_URL`/`TIPJAR_URL` in App.tsx are **placeholders** for Seth to fill
+in. All styling in `index.css` (vanilla). Build clean.

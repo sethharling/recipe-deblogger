@@ -93,8 +93,10 @@ change: the three inline `style={{color:'red'}}` error messages now use a `.erro
 Build clean (`npm run build`).
 
 ### Database / saved recipes (DONE 2026-06-30)
-- **SQLite via SQLModel**, single file `backend/recipes.db` (gitignored). Swap
-  `DATABASE_URL` in `app/db.py` for Postgres at deploy time — models unchanged.
+- **SQLite (dev) / Postgres (prod) via SQLModel.** `app/db.py` reads the `DATABASE_URL`
+  env var, falling back to the local file `backend/recipes.db` (gitignored) when unset.
+  Models/queries identical for both. (2026-07-08: made the swap env-var driven — see
+  "Postgres on Render" below.)
 - One `recipes` table (`StoredRecipe`): id, unique `source_url`, title (indexed),
   ingredients/instructions as **JSON columns**, image, total_time, yields,
   extracted_via, created_at. Table auto-created on FastAPI startup.
@@ -120,6 +122,17 @@ Idea: paste an Instagram link, get the recipe. Feasibility, tiered by effort:
 - **Decision:** the general LLM fallback tier is the unlock for both messy pages and IG
   captions — build that first, add IG-caption adapter on top, skip video/vision until we
   see how many real IG recipes live in captions vs. video.
+
+### Postgres on Render (DONE 2026-07-08)
+Backend is deployed on Render. To persist data (Render's disk is ephemeral — SQLite file
+was getting wiped every redeploy):
+- `app/db.py` now reads `DATABASE_URL` (env), normalizes Render's `postgres://` →
+  `postgresql+psycopg://`, and only passes SQLite's `check_same_thread` for sqlite URLs.
+- Added `psycopg[binary]>=3.2` to `requirements.txt`.
+- Render setup: create a Render Postgres (same region as the web service), set the web
+  service's `DATABASE_URL` env var to the **Internal** Database URL. `init_db()`
+  auto-creates the `recipes` table on startup — no migrations. Verified SQLite fallback
+  still works locally.
 
 ### Next steps
 1. Add the LLM fallback tier for pages without structured data (deferred by Seth 06-29).

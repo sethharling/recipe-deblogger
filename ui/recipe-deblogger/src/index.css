@@ -24,22 +24,56 @@ body {
   line-height: 1.6;
 }
 
-main {
+/* App shell: centered column, footer pinned to the bottom on short pages. */
+.app {
   max-width: 42rem;
+  min-height: 100vh;
   margin: 0 auto;
-  padding: 2rem 1.25rem 4rem;
+  padding: 2rem 1.25rem 2rem;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Header + nav */
-main > h1 {
+main {
+  flex: 1;
+}
+
+/* Header + nav (centered) */
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h1 {
   font-family: var(--serif);
-  font-size: 2rem;
-  margin: 0 0 0.25rem;
+  font-size: 2.25rem;
+  margin: 0 0 1rem;
 }
 
 nav {
-  margin-bottom: 2rem;
-  color: var(--ink-soft);
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+nav a {
+  padding: 0.4rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+nav a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+nav a.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
 }
 
 a {
@@ -49,6 +83,39 @@ a {
 a:hover {
   color: var(--accent-dark);
   text-decoration: underline;
+}
+
+/* Intro blurb on the deblog page */
+.intro {
+  color: var(--ink-soft);
+  margin: 0 0 1.5rem;
+}
+
+/* Footer */
+footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+  gap: 1.75rem;
+}
+footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+footer a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.icon {
+  width: 1.15em;
+  height: 1.15em;
+  fill: currentColor;
 }
 
 /* Forms / inputs */

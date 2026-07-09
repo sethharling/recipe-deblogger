@@ -7,3 +7,4 @@ extruct>=0.17
 recipe-scrapers>=15.0
 pydantic>=2.9
 sqlmodel>=0.0.21
+psycopg[binary]>=3.2

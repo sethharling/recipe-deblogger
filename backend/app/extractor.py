@@ -47,7 +47,7 @@ BROWSER_HEADERS = {
 
 # HTTP statuses that indicate anti-bot blocking rather than a genuine "not found".
 # These trigger the curl_cffi browser-impersonation fallback.
-_BLOCKED_STATUSES = {402, 403, 406, 429, 503}
+_BLOCKED_STATUSES = {403, 406, 429, 503}
 
 
 async def _fetch_httpx(url: str) -> str:

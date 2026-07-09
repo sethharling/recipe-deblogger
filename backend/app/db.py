@@ -1,10 +1,11 @@
-"""Database setup: SQLite via SQLModel.
+"""Database setup via SQLModel.
 
-A single-file DB (`recipes.db`) is plenty for a personal app. To move to Postgres
-later, change DATABASE_URL — the models and queries stay the same.
+Uses the DATABASE_URL env var (Postgres in prod, e.g. on Render), falling back to a
+local SQLite file for dev. The models and queries are identical for both.
 """
 from __future__ import annotations
 
+import os
 from collections.abc import Iterator
 from datetime import datetime, timezone
 
@@ -13,10 +14,15 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 from .models import Recipe
 
-DATABASE_URL = "sqlite:///./recipes.db"
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./recipes.db")
 
-# check_same_thread=False lets FastAPI's threadpool share the connection.
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+# Render (and others) hand out a "postgres://" URL; SQLAlchemy needs an explicit driver.
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg://", 1)
+
+# check_same_thread is a SQLite-only arg; Postgres rejects it.
+_connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(DATABASE_URL, connect_args=_connect_args)
 
 
 def _utcnow() -> datetime:

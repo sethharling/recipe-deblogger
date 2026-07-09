@@ -1,8 +1,6 @@
 # Recipe Deblogger
 
-For when you want to look at a recipe without having to scroll past a useless blog post on a website riddled with annoying ads. This is for you.
-
-## How It Works
+[recipe-deblogger.com](https://recipe-deblogger.com)
 
 Scrapes a recipe URL, strips the blog/ad bloat, and shows + stores just the ingredients
 and instructions. Python + FastAPI backend, Vite + React + TS frontend.

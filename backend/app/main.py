@@ -24,17 +24,10 @@ from .models import ExtractRequest
 
 app = FastAPI(title="Recipe Deblogger API", version="0.1.0")
 
-origins = [
-    "http://localhost:5173", 
-    "https://recipe-deblogger.com",
-    "https://www.recipe-deblogger.com",
-    "https://recipe-deblogger.pages.dev",
-]
-
+# Vite dev server defaults to :5173. Tighten this for production.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=["http://localhost:5173"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -43,10 +36,6 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup() -> None:
     init_db()
-
-@app.get("/")
-async def root() -> dict[str, str]:
-    return {"status": "ok"}
 
 
 @app.get("/health")
