@@ -13,9 +13,13 @@ Build #1 and #2 first, measure the miss rate, then add #3 only for the straggler
 """
 from __future__ import annotations
 
+import os
+
 import httpx
 
 from .models import Recipe
+
+SCRAPER_PROXY = os.getenv("SCRAPER_PROXY") or None
 
 
 class FetchError(Exception):
@@ -56,6 +60,7 @@ async def _fetch_httpx(url: str) -> str:
         follow_redirects=True,
         timeout=15.0,
         headers=BROWSER_HEADERS,
+        proxy=SCRAPER_PROXY,
     ) as client:
         resp = await client.get(url)
         resp.raise_for_status()
@@ -77,6 +82,7 @@ async def _fetch_curl_cffi(url: str) -> str:
             impersonate="chrome",
             timeout=20,
             allow_redirects=True,
+            proxy=SCRAPER_PROXY,
         )
         resp.raise_for_status()
         return resp.text
