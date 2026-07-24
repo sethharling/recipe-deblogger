@@ -14,12 +14,23 @@ Build #1 and #2 first, measure the miss rate, then add #3 only for the straggler
 from __future__ import annotations
 
 import os
+from urllib.parse import urlencode
 
 import httpx
 
 from .models import Recipe
 
 SCRAPER_PROXY = os.getenv("SCRAPER_PROXY") or None
+SCRAPERAPI_API_KEY = os.getenv("SCRAPERAPI_API_KEY") or None
+SCRAPERAPI_URL = os.getenv("SCRAPERAPI_URL") or "api.scraperapi.com"
+
+
+def _via_scraperapi(url: str) -> str:
+    if not SCRAPER_API_KEY:
+        return url
+    return f"https://{SCRAPERAPI_URL}/?" + urlencode(
+        {"api_key": SCRAPERAPI_API_KEY, "url":url}
+    )
 
 
 class FetchError(Exception):
@@ -54,11 +65,11 @@ BROWSER_HEADERS = {
 _BLOCKED_STATUSES = {403, 406, 429, 503}
 
 
-async def _fetch_httpx(url: str) -> str:
+async def _fetch_httpx(url: str, timeout: float = 15.0) -> str:
     """Fast path: lightweight async client. Used for the majority of sites."""
     async with httpx.AsyncClient(
         follow_redirects=True,
-        timeout=15.0,
+        timeout=timeout,
         headers=BROWSER_HEADERS,
         proxy=SCRAPER_PROXY,
     ) as client:
@@ -90,6 +101,8 @@ async def _fetch_curl_cffi(url: str) -> str:
 
 async def fetch_html(url: str) -> str:
     """Fetch a page, falling back to browser impersonation if the site blocks us."""
+    if SCRAPERAPI_API_KEY:
+        return await _fetch_httpx(_via_scraperapi(url), timeout=70.0)
     try:
         return await _fetch_httpx(url)
     except httpx.HTTPStatusError as exc:
@@ -311,6 +324,8 @@ async def extract_recipe(url: str) -> Recipe | None:
 
     # No recipe found. Could be a soft block (200 + decoy body). Retry with
     # impersonation — unless fetch_html already fell back to curl_cffi for this page.
+    if SCRAPERAPI_API_KEY:
+        return None
     try:
         impersonated = await _fetch_curl_cffi(url)
     except Exception:
