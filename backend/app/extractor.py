@@ -20,13 +20,12 @@ import httpx
 
 from .models import Recipe
 
-SCRAPER_PROXY = os.getenv("SCRAPER_PROXY") or None
 SCRAPERAPI_API_KEY = os.getenv("SCRAPERAPI_API_KEY") or None
 SCRAPERAPI_URL = os.getenv("SCRAPERAPI_URL") or "api.scraperapi.com"
 
 
 def _via_scraperapi(url: str) -> str:
-    if not SCRAPER_API_KEY:
+    if not SCRAPERAPI_API_KEY:
         return url
     return f"https://{SCRAPERAPI_URL}/?" + urlencode(
         {"api_key": SCRAPERAPI_API_KEY, "url":url}
@@ -71,7 +70,6 @@ async def _fetch_httpx(url: str, timeout: float = 15.0) -> str:
         follow_redirects=True,
         timeout=timeout,
         headers=BROWSER_HEADERS,
-        proxy=SCRAPER_PROXY,
     ) as client:
         resp = await client.get(url)
         resp.raise_for_status()
@@ -93,7 +91,6 @@ async def _fetch_curl_cffi(url: str) -> str:
             impersonate="chrome",
             timeout=20,
             allow_redirects=True,
-            proxy=SCRAPER_PROXY,
         )
         resp.raise_for_status()
         return resp.text
