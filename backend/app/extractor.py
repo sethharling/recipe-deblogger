@@ -140,7 +140,14 @@ def _try_json_ld(html: str, url: str) -> Recipe | None:
         return None
 
     data = extruct.extract(html, base_url=url, syntaxes=["json-ld"])
+    # some sites nest the real recipe inside an @graph array on a top-level
+    # node that is itself typed "recipe" but carries no ingredients. Flatten
+    # @graph so those inner nodes are candidates too.
+    items = []
     for item in data.get("json-ld", []):
+        items.append(item)
+        items.extend(item.get("@graph", []))
+    for item in items:
         types = item.get("@type", [])
         types = types if isinstance(types, list) else [types]
         if "Recipe" not in types:
