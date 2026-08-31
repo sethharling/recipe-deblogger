@@ -5,6 +5,8 @@
 Scrapes a recipe URL, strips the blog/ad bloat, and shows + stores just the ingredients
 and instructions. Python + FastAPI backend, Vite + React + TS frontend.
 
+Note that not all recipe links currently work. Certain recipe website block bots and web scrapers, and the ones that get passed those cost money. Eventually I will add them. 
+
 ## Prerequisites
 
 - Python 3.13+
