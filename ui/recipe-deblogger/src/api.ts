@@ -1,4 +1,5 @@
 export const API_BASE = 'https://recipe-deblogger.onrender.com'
+//export const API_BASE = 'http://localhost:8000' //For Development
 
 export type Recipe = {
   id: number

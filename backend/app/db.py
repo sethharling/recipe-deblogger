@@ -1,11 +1,7 @@
 """Database setup via SQLModel.
-
-Uses the DATABASE_URL env var (Postgres in prod, e.g. on Render), falling back to a
-local SQLite file for dev. The models and queries are identical for both.
 """
 from __future__ import annotations
 
-import os
 from collections.abc import Iterator
 from datetime import datetime, timezone
 
@@ -14,17 +10,8 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 from .models import Recipe
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./recipes.db")
-
-# Render (and others) hand out a "postgres://" URL; SQLAlchemy needs an explicit driver.
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg://", 1)
-elif DATABASE_URL.startswith("postgresql://"):
-    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
-
-# check_same_thread is a SQLite-only arg; Postgres rejects it.
-_connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
-engine = create_engine(DATABASE_URL, connect_args=_connect_args)
+DATABASE_URL = "sqlite:///./recipes.db"
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 
 def _utcnow() -> datetime:
